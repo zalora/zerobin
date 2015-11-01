@@ -1,7 +1,8 @@
 name: zerobin
-version: 1.0.0
-synopsis: Post to paste.ec
-description:
+version: 1.1.0
+synopsis: Post to 0bin services
+description: Post encrypted content to 0bin sites
+  like http://0bin.net or https://paste.ec
 license: MIT
 license-file: LICENSE
 author: Igor Pashev

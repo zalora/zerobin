@@ -62,4 +62,12 @@ running by [Node.js](https://nodejs.org) to decrypt:
     $ ./dist/build/zerobin-nodejs/zerobin-nodejs
     heinrich hertz
 
+Features/Bugs/TODOs
+===================
+1. https://paste.ec supports images, `zerobin` can encrypt anything,
+   but only plain text will be decrypted.
+2. "Burn after reading" (`-e once`) really means "burn after two readings",
+   because we do not redirect like browser does.
+   You can verify your paste before sharing the link ;-)
+
 

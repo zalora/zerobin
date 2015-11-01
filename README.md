@@ -1,7 +1,8 @@
 About
 =====
 This is a library and a command-line utility
-to share secrets via "zerobin" sites like https://paste.ec
+to share secrets via ["zerobin"](https://github.com/sametmax/0bin)
+sites like https://paste.ec
 using client-side encryption with [SJCL](https://crypto.stanford.edu/sjcl/).
 
 This library reimplements encryption part of [SJCL](https://crypto.stanford.edu/sjcl/)

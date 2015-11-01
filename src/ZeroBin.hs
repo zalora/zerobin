@@ -47,7 +47,7 @@ post ex ct = do
   let req = HTTP.urlEncodedBody
             [ (C.pack "expiration" , C.pack     $ show ex)
             , (C.pack "content"    , L.toStrict $ JSON.encode ct)
-            ] (req' { HTTP.secure = True })
+            ] req'
   manager <- HTTP.newManager HTTP.tlsManagerSettings
   response <- HTTP.httpLbs req manager
   return . fromJust . JSON.decode $ HTTP.responseBody response

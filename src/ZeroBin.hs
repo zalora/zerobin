@@ -2,7 +2,6 @@
 
 module ZeroBin (
   Expiration(..),
-  pasteEc,
   share
 ) where
 
@@ -16,9 +15,6 @@ import qualified Data.Aeson as JSON
 import qualified Data.ByteString.Char8 as C
 import qualified Data.ByteString.Lazy as L
 import qualified Network.HTTP.Conduit as HTTP
-
-pasteEc :: String
-pasteEc = "https://paste.ec"
 
 data Response = Response {
     status  :: String
@@ -41,25 +37,28 @@ instance Show Expiration where
   show Month = "1_month"
   show Never = "never"
 
-post :: Expiration -> Content -> IO Response
-post ex ct = do
-  req' <- HTTP.parseUrl $ pasteEc ++ "/paste/create"
+post :: String -> Expiration -> Content -> IO (Either String String)
+post bin ex ct = do
+  req' <- HTTP.parseUrl $ bin ++ "/paste/create"
   let req = HTTP.urlEncodedBody
             [ (C.pack "expiration" , C.pack     $ show ex)
             , (C.pack "content"    , L.toStrict $ JSON.encode ct)
             ] req'
   manager <- HTTP.newManager HTTP.tlsManagerSettings
   response <- HTTP.httpLbs req manager
-  return . fromJust . JSON.decode $ HTTP.responseBody response
-
-share :: Expiration -> ByteString -> IO (Either String String)
-share ex txt = do 
-  pwd  <- makePassword 33
-  c    <- encrypt pwd (encode txt)
-  resp <- post ex c
+  let resp = fromJust . JSON.decode $ HTTP.responseBody response
   case status resp of
     "ok" -> return . Right $
-            pasteEc ++ "/paste/" ++ (fromJust . paste) resp ++ "#" ++ pwd
+            bin ++ "/paste/" ++ (fromJust . paste) resp
     _    -> return . Left $
             (fromJust . message) resp
+
+share :: String -> Expiration -> ByteString -> IO (Either String String)
+share bin ex txt = do
+  pwd  <- makePassword 33
+  c    <- encrypt pwd (encode txt)
+  append pwd `fmap` post bin ex c
+  where
+    append _ (Left e) = Left e
+    append p (Right u) = Right $ u ++ "#" ++ p
 

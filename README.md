@@ -37,15 +37,17 @@ Type `zerobin --help` to see usage summary:
       zerobin [options] TEXT
 
     Options:
-      -e, --expire=E  Set expiration of paste: once, day, week, month [default: week]
+      -b, --bin=BIN   0bin service [default: https://paste.ec]
       -f, --file      Paste the content of file TEXT instead of plain TEXT
+      -e, --expire=E  Set expiration of paste: once, day, week, month [default: day]
 
       -h, --help      Show this message
 
     Examples:
-      zerobin hello           paste "hello" for a week
-      zerobin -f /etc/fstab   paste file /etc/fstab for a week
-      zerobin -e once hello   paste "hello", it will burn after reading
+      zerobin hello                      paste "hello" for a day
+      zerobin -f /etc/fstab              paste file /etc/fstab for a day
+      zerobin -e once hello              paste "hello", it will burn after reading
+      zerobin -b http://0bin.net hello   paste to 0bin.net
 
 
 Hacking
@@ -65,10 +67,11 @@ running by [Node.js](https://nodejs.org) to decrypt:
 
 Features/Bugs/TODOs
 ===================
-1. https://paste.ec supports images, `zerobin` can encrypt anything,
-   but only plain text will be decrypted.
+1. [0bin](https://github.com/sametmax/0bin) supports images,
+   `zerobin` can encrypt anything, but only plain text will be decrypted.
 2. "Burn after reading" (`-e once`) really means "burn after two readings",
    because we do not redirect like browser does.
    You can verify your paste before sharing the link ;-)
+3. http://0bin.net does not support `-e week`
 
 

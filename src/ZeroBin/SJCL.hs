@@ -84,7 +84,7 @@ encrypt password plaintext = do
              BS.replicate (fromIntegral eL) 0
            ]
       a1iv = ivAdd (fromJust . makeIV $ a0) 1
-      ciphtext = C.append
+      ciphtext = BS.append
                   (ctrCombine cipher a1iv plaintext)
                   (BA.xor (ecbEncrypt cipher a0) tag)
   return Content { iv = toWeb ivd, salt = toWeb slt, ct = toWeb ciphtext }

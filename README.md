@@ -56,12 +56,12 @@ There is a simple test program in the [./nodejs](./nodejs) directory.
 It uses this library to encrypt a message and original SJCL
 running by [Node.js](https://nodejs.org) to decrypt:
 
-    $ # get nodejs and npm, e. g. on Debian; sudo apt-get install nodejs npm
-    $ npm install sjcl
     $ git clone https://github.com/zalora/zerobin.git
     $ cd zerobin
     $ cabal install --dependencies-only
     $ cabal install -f nodejs --ghc-option="-Werror"
+    $ # get nodejs and npm, e. g. on Debian; sudo apt-get install nodejs npm
+    $ npm install sjcl
     $ ./dist/build/zerobin-nodejs/zerobin-nodejs
     heinrich hertz
 

@@ -30,18 +30,18 @@ data Expiration
   | Month
   | Never
 
-instance Show Expiration where
-  show Once  = "burn_after_reading"
-  show Day   = "1_day"
-  show Week  = "1_week"
-  show Month = "1_month"
-  show Never = "never"
+form :: Expiration -> String
+form Once  = "burn_after_reading"
+form Day   = "1_day"
+form Week  = "1_week"
+form Month = "1_month"
+form Never = "never"
 
 post :: String -> Expiration -> Content -> IO (Either String String)
 post bin ex ct = do
   req' <- HTTP.parseUrl $ bin ++ "/paste/create"
   let req = HTTP.urlEncodedBody
-            [ (C.pack "expiration" , C.pack     $ show ex)
+            [ (C.pack "expiration" , C.pack     $ form ex)
             , (C.pack "content"    , L.toStrict $ JSON.encode ct)
             ] req'
   manager <- HTTP.newManager HTTP.tlsManagerSettings

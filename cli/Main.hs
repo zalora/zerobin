@@ -8,7 +8,7 @@ import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.IO (stderr, hPutStrLn)
 import Text.RawString.QQ (r)
-import ZeroBin (share, Expiration(..))
+import Web.ZeroBin (share, Expiration(..))
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as C
 import qualified System.Console.Docopt.NoTH as O

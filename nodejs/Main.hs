@@ -4,8 +4,8 @@ module Main where
 
 import System.Environment (getArgs)
 import System.Process (callProcess)
-import ZeroBin.SJCL (encrypt)
-import ZeroBin.Utils (makePassword)
+import Web.ZeroBin.SJCL (encrypt)
+import Web.ZeroBin.Utils (makePassword)
 import qualified Data.Aeson as JSON
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as C

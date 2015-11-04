@@ -1,4 +1,4 @@
-module ZeroBin.Utils (
+module Web.ZeroBin.Utils (
   toWeb
 , makePassword
 ) where

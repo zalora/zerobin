@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module ZeroBin (
+module Web.ZeroBin (
   Expiration(..),
   share
 ) where
@@ -9,8 +9,8 @@ import Data.ByteString (ByteString)
 import Data.ByteString.Base64 (encode)
 import Data.Maybe (fromJust)
 import GHC.Generics (Generic)
-import ZeroBin.SJCL (encrypt, Content)
-import ZeroBin.Utils (makePassword)
+import Web.ZeroBin.SJCL (encrypt, Content)
+import Web.ZeroBin.Utils (makePassword)
 import qualified Data.Aeson as JSON
 import qualified Data.ByteString.Char8 as C
 import qualified Data.ByteString.Lazy as L

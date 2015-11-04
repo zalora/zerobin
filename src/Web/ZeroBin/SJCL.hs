@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module ZeroBin.SJCL (
+module Web.ZeroBin.SJCL (
   Content(..),
   encrypt
 ) where
@@ -16,7 +16,7 @@ import Data.ByteString (ByteString)
 import Data.Maybe (fromJust)
 import Data.Word (Word8)
 import GHC.Generics (Generic)
-import ZeroBin.Utils (toWeb)
+import Web.ZeroBin.Utils (toWeb)
 import qualified Crypto.KDF.PBKDF2 as PBKDF2
 import qualified Data.Aeson as JSON
 import qualified Data.ByteArray as BA

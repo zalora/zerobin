@@ -6,7 +6,7 @@ sites like https://paste.ec
 using client-side encryption with [SJCL](https://crypto.stanford.edu/sjcl/).
 
 This library reimplements encryption part of [SJCL](https://crypto.stanford.edu/sjcl/)
-allowing you to post secrets from Haskell programs and shell script.
+allowing you to post secrets from Haskell programs and shell scripts.
 
 Requirements
 ============

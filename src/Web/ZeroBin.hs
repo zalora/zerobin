@@ -1,13 +1,18 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 
 module Web.ZeroBin (
   Expiration(..),
+  ZeroBinError(..),
   share
 ) where
 
+import Control.Exception (Exception)
+import Control.Exception.Base (throwIO)
 import Data.ByteString (ByteString)
 import Data.ByteString.Base64 (encode)
 import Data.Maybe (fromJust)
+import Data.Typeable (Typeable)
 import GHC.Generics (Generic)
 import Web.ZeroBin.SJCL (encrypt, Content)
 import Web.ZeroBin.Utils (makePassword)
@@ -23,6 +28,10 @@ data Response = Response {
   } deriving (Generic, Show)
 instance JSON.FromJSON Response
 
+data ZeroBinError = ZeroBinError String
+  deriving (Show, Typeable)
+instance Exception ZeroBinError
+
 data Expiration
   = Once 
   | Day
@@ -37,7 +46,7 @@ form Week  = "1_week"
 form Month = "1_month"
 form Never = "never"
 
-post :: String -> Expiration -> Content -> IO (Either String String)
+post :: String -> Expiration -> Content -> IO String
 post bin ex ct = do
   req' <- HTTP.parseUrl $ bin ++ "/paste/create"
   let req = HTTP.urlEncodedBody
@@ -48,17 +57,13 @@ post bin ex ct = do
   response <- HTTP.httpLbs req manager
   let resp = fromJust . JSON.decode $ HTTP.responseBody response
   case status resp of
-    "ok" -> return . Right $
-            bin ++ "/paste/" ++ (fromJust . paste) resp
-    _    -> return . Left $
-            (fromJust . message) resp
+    "ok" -> return $ bin ++ "/paste/" ++ (fromJust . paste) resp
+    _    -> throwIO . ZeroBinError $ (fromJust . message) resp
 
-share :: String -> Expiration -> ByteString -> IO (Either String String)
+share :: String -> Expiration -> ByteString -> IO String
 share bin ex txt = do
   pwd  <- makePassword 33
-  c    <- encrypt pwd (encode txt)
-  append pwd `fmap` post bin ex c
-  where
-    append _ (Left e) = Left e
-    append p (Right u) = Right $ u ++ "#" ++ p
+  cnt  <- encrypt pwd (encode txt)
+  uri  <- post bin ex cnt
+  return $ uri ++ "#" ++ pwd
 

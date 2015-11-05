@@ -72,9 +72,5 @@ main = do
     cnt    <- getContent (args `O.isPresent` O.longOption "file") text
     case getExpiration expire of
       Nothing -> die "invalid value for expiration"
-      Just e  -> do
-        rc <- share bin e cnt
-        case rc of
-          Left err -> die err
-          Right uri -> putStrLn uri
+      Just e  -> share bin e cnt >>= putStrLn
 

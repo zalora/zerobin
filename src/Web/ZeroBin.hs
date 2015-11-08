@@ -1,3 +1,14 @@
+{-|
+High-level functions for posting to 0bin services like
+<http://0bin.net> or <http://paste.ec>.
+
+ >>> import Web.ZeroBin
+ >>> import Data.ByteString.Char8
+ >>> share "http://0bin.net" Day (pack "hello")
+"http://0bin.net/paste/ZH6VyKXjDHAiPT8J#C6LLidGyHO7xt3xuDtsNHjZ77luualukEuJ25S6w/K1m"
+
+-}
+
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 
@@ -28,16 +39,22 @@ data Response = Response {
   } deriving (Generic, Show)
 instance JSON.FromJSON Response
 
+-- | 0bin error message
 data ZeroBinError = ZeroBinError String
   deriving (Show, Typeable)
 instance Exception ZeroBinError
 
+-- | Expiration of a paste.
+--   "Burn after reading" really means "burn after two readings",
+--   because we do not redirect to the paste like a browser does.
+--   You can verify your paste before sharing the link.
+--   Original <http://0bin.net> does not support 'Week'.
 data Expiration
-  = Once 
-  | Day
-  | Week
-  | Month
-  | Never
+  = Once      -- ^ burn after reading
+  | Day       -- ^ keep for 24 hours
+  | Week      -- ^ for 7 days
+  | Month     -- ^ for 30 days
+  | Never     -- ^ for 100 years
 
 form :: Expiration -> String
 form Once  = "burn_after_reading"
@@ -60,7 +77,14 @@ post bin ex ct = do
     "ok" -> return $ bin ++ "/paste/" ++ (fromJust . paste) resp
     _    -> throwIO . ZeroBinError $ (fromJust . message) resp
 
-share :: String -> Expiration -> ByteString -> IO String
+
+-- | Encrypts the plain data with a random password,
+--   post to 0bin and return the URI of a new paste.
+--   Can throw 'ZeroBinError' or 'Network.HTTP.Conduit.HttpException'.
+share :: String      -- ^ the address of 0bin, e. g. <http://0bin.net> or <https://paste.ec>
+      -> Expiration
+      -> ByteString  -- ^ the plain data to encrypt and paste
+      -> IO String   -- ^ the URI of paste
 share bin ex txt = do
   pwd  <- makePassword 33
   cnt  <- encrypt pwd (encode txt)

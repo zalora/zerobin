@@ -1,3 +1,7 @@
+{-|
+Various utility functions
+-}
+
 module Web.ZeroBin.Utils (
   toWeb
 , makePassword
@@ -8,10 +12,13 @@ import Data.ByteString (ByteString)
 import Data.ByteString.Base64 (encode)
 import Data.ByteString.Char8 (unpack)
 
-
-toWeb :: ByteString -> String
+-- | Encodes to base64 and drops padding '='.
+toWeb :: ByteString -- ^ the data to encode
+      -> String     -- ^ base64 string without padding
 toWeb = takeWhile (/= '=') . unpack . encode
 
-makePassword :: Int -> IO String
+-- | Makes a random password
+makePassword :: Int       -- ^ the number of bytes of entropy
+             -> IO String -- ^ random byte-string encoded by 'toWeb'
 makePassword n = toWeb `fmap` getEntropy n
 

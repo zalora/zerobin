@@ -1,3 +1,12 @@
+{-|
+Encryption compatible with <https://crypto.stanford.edu/sjcl/ SJCL>
+
+ >>> import Web.ZeroBin.SJCL
+ >>> import Data.ByteString.Char8
+ >>> encrypt "secret-word" (pack "hello")
+Content {iv = "VxyuJRVtKJqhG2iR/sPjAQ", salt = "AhnDuP1CkTCBlQTHgw", ct = "cqr7/pMRXrcROmcgwA"}
+-}
+
 {-# LANGUAGE DeriveGeneric #-}
 
 module Web.ZeroBin.SJCL (
@@ -23,10 +32,11 @@ import qualified Data.ByteArray as BA
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as C
 
+-- | Encrypted content. Each field is a 'toWeb'-encoded byte-string
 data Content = Content {
-    iv   :: String
-  , salt :: String
-  , ct   :: String
+    iv   :: String -- ^ random initialization vector (IV)
+  , salt :: String -- ^ random salt
+  , ct   :: String -- ^ encrypted data
   } deriving (Generic, Show)
 
 -- FIXME: http://stackoverflow.com/questions/33045350/unexpected-haskell-aeson-warning-no-explicit-implementation-for-tojson
@@ -53,9 +63,13 @@ chunks sz = split
 lengthOf :: Int -> Word8
 lengthOf = ceiling . (logBase 256 :: Float -> Float) . fromIntegral
 
--- Ref. https://tools.ietf.org/html/rfc3610
--- SJCL uses 64-bit tag (8 bytes)
-encrypt :: String -> ByteString -> IO Content
+-- | <https://crypto.stanford.edu/sjcl/ SJCL>-compatible encryption function.
+--   Follows <https://tools.ietf.org/html/rfc3610 RFC3610> with a 8-bytes tag.
+--   Uses 16-bytes cipher key generated from the password and a random 'salt'
+--   by PBKDF2-HMAC-SHA256 with 1000 iterations.
+encrypt :: String     -- ^ the password
+        -> ByteString -- ^ the plain data to encrypt
+        -> IO Content
 encrypt password plaintext = do
   ivd    <- getEntropy 16 -- XXX it is truncated to get the nonce below
   slt    <- getEntropy 13 -- arbitrary length

@@ -36,16 +36,11 @@ instance JSON.ToJSON Content where
 makeCipher :: ByteString -> IO AES256
 makeCipher = throwCryptoErrorIO . cipherInit
 
--- SJCL uses PBKDF2-HMAC-SHA256 with 1000 iterations, 32 bytes length,
--- but the output is truncated down to 16 bytes.
 -- https://github.com/bitwiseshiftleft/sjcl/blob/master/core/pbkdf2.js
--- TODO: this is default, we can specify it explicitly
---       for forward compatibility
+-- TODO: this is default, we can specify it explicitly for forward compatibility
 makeKey :: ByteString -> ByteString -> ByteString
-makeKey pwd slt = BS.take 16 $ PBKDF2.generate (prfHMAC SHA256)
-  PBKDF2.Parameters {PBKDF2.iterCounts = 1000, PBKDF2.outputLength = 32}
-  pwd slt
-
+makeKey = PBKDF2.generate (prfHMAC SHA256)
+  PBKDF2.Parameters {PBKDF2.iterCounts = 1000, PBKDF2.outputLength = 16}
 
 chunks :: Int -> ByteString -> [ByteString]
 chunks sz = split

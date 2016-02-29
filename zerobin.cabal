@@ -1,5 +1,5 @@
 name: zerobin
-version: 1.5.0
+version: 1.5.1
 synopsis: Post to 0bin services
 description: Post encrypted content to 0bin sites
   like http://0bin.net or https://paste.ec

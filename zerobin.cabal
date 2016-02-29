@@ -10,7 +10,7 @@ maintainer: Igor Pashev <pashev.igor@gmail.com>
 copyright: 2015, Zalora South East Asia Pte. Ltd
 category: Cryptography, Web
 build-type: Simple
-extra-source-files: README.md
+extra-source-files: README.md ChangeLog.md
 cabal-version: >= 1.20
 
 source-repository head

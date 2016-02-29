@@ -46,6 +46,7 @@ Type `zerobin --help` to see usage summary:
     Examples:
       zerobin hello                      paste "hello" for a day
       zerobin -f /etc/fstab              paste file /etc/fstab for a day
+      cat /etc/fstab | zerobin -f -      likewise
       zerobin -e once hello              paste "hello", it will burn after reading
       zerobin -b http://0bin.net hello   paste to 0bin.net
 

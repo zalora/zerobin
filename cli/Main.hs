@@ -24,7 +24,7 @@ Usage:
 
 Options:
   -b, --bin=BIN   0bin service [default: https://paste.ec]
-  -f, --file      Paste the content of file TEXT instead of plain TEXT
+  -f, --file      Paste the content of file TEXT ("-" for stdin)
   -e, --expire=E  Set expiration of paste: once, day, week, month [default: day]
 
   -h, --help      Show this message
@@ -32,6 +32,7 @@ Options:
 Examples:
   zerobin hello                      paste "hello" for a day
   zerobin -f /etc/fstab              paste file /etc/fstab for a day
+  cat /etc/fstab | zerobin -f -      likewise
   zerobin -e once hello              paste "hello", it will burn after reading
   zerobin -b http://0bin.net hello   paste to 0bin.net
 |]
@@ -52,11 +53,10 @@ die msg = do
   exitFailure
 
 getContent :: Bool -> String -> IO BS.ByteString
-getContent asFile text =
-  if not asFile
-    then return $ C.pack text
-    else BS.readFile text
-
+getContent fromFile text
+  | fromFile && (text == "-") = BS.getContents
+  | fromFile = BS.readFile text
+  | otherwise = return $ C.pack text
 
 main :: IO ()
 main = do

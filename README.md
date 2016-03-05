@@ -61,7 +61,7 @@ running by [Node.js](https://nodejs.org) to decrypt:
     $ cd zerobin
     $ cabal install -f nodejs --dependencies-only
     $ cabal install -f nodejs --ghc-option="-Werror"
-    $ # get nodejs and npm, e. g. on Debian; sudo apt-get install nodejs npm
+    $ # get nodejs and npm, e. g. on Debian: sudo apt-get install nodejs npm
     $ npm install sjcl
     $ ./dist/build/zerobin-nodejs/zerobin-nodejs
     heinrich hertz

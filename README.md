@@ -38,7 +38,7 @@ Type `zerobin --help` to see usage summary:
 
     Options:
       -b, --bin=BIN   0bin service [default: https://paste.ec]
-      -f, --file      Paste the content of file TEXT instead of plain TEXT
+      -f, --file      Paste the content of file TEXT ("-" for stdin)
       -e, --expire=E  Set expiration of paste: once, day, week, month [default: day]
 
       -h, --help      Show this message

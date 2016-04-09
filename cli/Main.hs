@@ -53,9 +53,9 @@ die msg = do
   exitFailure
 
 getContent :: Bool -> String -> IO BS.ByteString
-getContent fromFile text
-  | fromFile && (text == "-") = BS.getContents
-  | fromFile = BS.readFile text
+getContent isFile text
+  | isFile && (text == "-") = BS.getContents
+  | isFile = BS.readFile text
   | otherwise = return $ C.pack text
 
 main :: IO ()
